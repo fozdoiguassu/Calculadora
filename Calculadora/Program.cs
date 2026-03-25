@@ -12,6 +12,10 @@ namespace Calculadora
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.WebHost.UseUrls("http://0.0.0.0:5275","https://0.0.0.0:7260");
+            builder.WebHost.ConfigureKestrel(options =>
+            {
+                options.ListenAnyIP(8080); // só HTTP
+            });
             // Add services to the container.
             builder.Services.AddRazorComponents().AddInteractiveServerComponents();
             builder.Services.AddDbContextFactory<AppDbContext>(options => options.UseSqlite("Data Source=database.db"));
@@ -36,7 +40,7 @@ namespace Calculadora
     app.UseMigrationsEndPoint();
             }
 
-            app.UseHttpsRedirection();
+       //     app.UseHttpsRedirection();
             app.UseAntiforgery();
             app.MapStaticAssets();
             app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
