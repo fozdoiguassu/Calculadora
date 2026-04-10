@@ -21,7 +21,10 @@ namespace CalculadoraDebitos.Services
             DateTime pagamento)
         {
             var inicio = new DateTime(vencimento.Year, vencimento.Month, 1).AddMonths(1);
-            var fim = new DateTime(pagamento.Year, pagamento.Month, 1).AddMonths(-1);
+            //Não inclui mês de pagamento
+            //var fim = new DateTime(pagamento.Year, pagamento.Month, 1).AddMonths(-1);
+            //inclui mês de pagamento
+            var fim = new DateTime(pagamento.Year, pagamento.Month, 1);
 
             if (inicio > fim)
                 return (1m, new List<ItemSelic>());
