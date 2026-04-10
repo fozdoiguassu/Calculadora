@@ -189,3 +189,14 @@ code {
         right: unset;
     }
 }
+fluent-date-picker {
+    position: relative;
+    z-index: 9999;
+}
+
+    fluent-date-picker::part(popup) {
+        position: fixed !important;
+        top: auto !important;
+        left: auto !important;
+        z-index: 999999 !important;
+    }

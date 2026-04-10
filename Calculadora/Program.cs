@@ -3,6 +3,7 @@ using CalculadoraDebitos.Data;
 using CalculadoraDebitos.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.FluentUI.AspNetCore.Components;
+using System.Globalization;
 
 namespace Calculadora
 {
@@ -29,6 +30,10 @@ namespace Calculadora
 
 
             builder.Services.AddFluentUIComponents();
+            var culture = new CultureInfo("pt-BR");
+
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

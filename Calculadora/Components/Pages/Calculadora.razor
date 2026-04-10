@@ -5,33 +5,29 @@
 
 @inject CalculadoraService CalculadoraService
 
+<!-- ENTRADA -->
+<div style="display: flex; justify-content: center; margin-bottom: 32px;">
+    <div style="max-width: 900px; width: 100%;">
 
-<!-- FORM 
-
-<h3 class="mb-4">Calculadora de Débitos</h3>
--->
-<div style="display: flex; justify-content: center;">
-    <FluentCard Class="p-4 mb-4"
-                Style="max-width: 900px; width: 100%;">
-
-        <FluentGrid Columns="12" Gap="12px">
+        <FluentGrid Columns="12" Gap="16px">
 
             <div style="grid-column: span 4;">
                 <FluentTextField Label="Valor Principal"
-                                 Value="@valorPrincipal.ToString()"
-                                 ValueChanged="@(v => valorPrincipal = decimal.TryParse(v, out var val) ? val : 0)" />
+                                 @bind-Value="valorPrincipalTexto" />
             </div>
 
             <div style="grid-column: span 3;">
                 <FluentDatePicker Label="Vencimento"
                                   Value="vencimento"
-                                  ValueChanged="@(d => vencimento = d ?? DateTime.Today)" />
+                                  ValueChanged="@(d => vencimento = d ?? DateTime.Today)"
+                                  AnchoredRegionFixedPlacement="true" />
             </div>
 
             <div style="grid-column: span 3;">
                 <FluentDatePicker Label="Pagamento"
                                   Value="pagamento"
-                                  ValueChanged="@(d => pagamento = d ?? DateTime.Today)" />
+                                  ValueChanged="@(d => pagamento = d ?? DateTime.Today)"
+                                  AnchoredRegionFixedPlacement="true" />
             </div>
 
             <div style="grid-column: span 2; display: flex; align-items: end;">
@@ -44,7 +40,7 @@
 
         </FluentGrid>
 
-    </FluentCard>
+    </div>
 </div>
 
 @if (resultado != null)
@@ -53,24 +49,24 @@
         <div style="max-width: 900px; width: 100%;">
 
             <!-- RESUMO -->
-            <FluentGrid Columns="4" Gap="12px" Class="mb-4">
+            <FluentGrid Columns="4" Gap="16px" Class="mb-5">
 
-                <FluentCard>
+                <FluentCard Class="p-3">
                     <small>Principal</small>
                     <h5>@resultado.Principal.ToString("C")</h5>
                 </FluentCard>
 
-                <FluentCard>
+                <FluentCard Class="p-3">
                     <small>UFFI</small>
                     <h5>@resultado.CorrecaoUffi.ToString("C")</h5>
                 </FluentCard>
 
-                <FluentCard>
+                <FluentCard Class="p-3">
                     <small>SELIC</small>
                     <h5>@resultado.CorrecaoSelic.ToString("C")</h5>
                 </FluentCard>
 
-                <FluentCard Style="border-left: 4px solid var(--accent-fill-rest);">
+                <FluentCard Class="p-3" Style="border-left: 4px solid var(--accent-fill-rest);">
                     <small>Total</small>
                     <h4 style="font-weight: bold;">
                         @resultado.Total.ToString("C")
@@ -82,7 +78,6 @@
             <!-- MEMÓRIAS -->
             <FluentGrid Columns="2" Gap="16px">
 
-                <!-- UFFI -->
                 @if (resultado?.MemoriaUffi?.Any(x => x.TaxaAnoVencimento != x.TaxaAnoCorrecao) == true)
                 {
                     <FluentCard Class="p-3">
@@ -98,14 +93,17 @@
                             <PropertyColumn Property="@(c => c.TaxaAnoCorrecao)" Title="UFFI Corr." />
                             <PropertyColumn Property="@(c => c.Taxa)" Title="Taxa" />
                             <PropertyColumn Property="@(c => c.Base)" Title="Base" />
+                            <!-- 
+
                             <PropertyColumn Property="@(c => c.Valor)" Title="Valor" />
+                            -->
+                            <PropertyColumn Property="@(c => c.Valor)" Title="Valor" Format="N2" />
 
                         </FluentDataGrid>
 
                     </FluentCard>
                 }
 
-                <!-- SELIC -->
                 <FluentCard Class="p-3">
 
                     <h5>Memória SELIC</h5>
@@ -117,7 +115,11 @@
                         <PropertyColumn Property="@(c => c.Mes)" Title="Mês" />
                         <PropertyColumn Property="@(c => c.Taxa)" Title="Taxa" />
                         <PropertyColumn Property="@(c => c.Base)" Title="Base" />
+                        <!-- 
                         <PropertyColumn Property="@(c => c.Valor)" Title="Valor" />
+
+                        -->
+                        <PropertyColumn Property="@(c => c.Valor)" Title="Valor" Format="N2" />
 
                     </FluentDataGrid>
 
@@ -131,6 +133,8 @@
 
 @code {
 
+    string valorPrincipalTexto = "0";
+
     decimal valorPrincipal;
 
     DateTime vencimento = new DateTime(DateTime.Today.Year, 1, 1);
@@ -140,6 +144,8 @@
 
     async Task Calcular()
     {
+        decimal.TryParse(valorPrincipalTexto, out valorPrincipal);
+
         resultado = await CalculadoraService.Calcular(
             valorPrincipal,
             vencimento,
